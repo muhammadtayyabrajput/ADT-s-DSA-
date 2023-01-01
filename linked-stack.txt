@@ -1,0 +1,36 @@
+//#include <iostream>
+//using namespace std;
+//
+//template<class T>
+//class ListNode
+//{
+//public:
+//	T value;
+//	ListNode<T>* next;
+//	ListNode(T v)
+//	{
+//		value = v;
+//		next = nullptr;
+//	}
+//};
+//
+//template<typename T>
+//class LinkedStack
+//{
+//	Node<T>* head;
+//	int count;
+//public:
+//	LinkedStack()
+//	{
+//		head = nullptr;
+//		count = 0;
+//	}
+//	LinkedStack(const LinkedStack<T>&);
+//	LinkedStack& operator = (const LinkedStack<T>&);
+//	~LinkedStack();
+//	void push(T); // insertAtHead
+//	T pop(); // removeAtHead
+//	T stackTop();
+//	bool isEmpty();
+//	int getNumberOfElements();
+//};

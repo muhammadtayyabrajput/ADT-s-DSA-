@@ -1,0 +1,241 @@
+#pragma once
+#ifndef XOR_H
+#include<iostream>
+
+using namespace std;
+
+template<class T>
+class XORlinklist;
+
+template<class T>
+class XORNode
+{
+	T value;
+	XORNode* ptr;
+	friend XORlinklist<T>;
+public:
+	XORNode():value(0),ptr(nullptr)
+	{}
+	XORNode(T val):value(val),ptr(nullptr)
+	{}
+	
+};
+template<class T>
+class XORlinklist
+{
+	XORNode<T>* head;
+	XORNode<T>* tail;
+public:
+	XORlinklist():head(nullptr),tail(nullptr)
+	{}
+	void insertAtTail(T);
+	void insertAtHead(T);
+	void printList();
+	XORNode<T>* search(T);
+	void removeAtTail();
+	void removeAtHead();
+	void insertAfter(T, T);
+	void deleteAfter(T);
+	void deleteBefore(T);
+	XORNode<T>* XOR(XORNode<T>* n1, XORNode<T>* n2)
+	{
+		return (XORNode<T>*)((uintptr_t)(n1) ^ (uintptr_t)(n2));
+	}
+};
+template<class T>
+void XORlinklist<T>::insertAfter(T k, T v)
+{
+	if (!head)
+	{
+		insertAtHead(v);
+		return;
+	}
+	if (tail->value == k)
+	{
+		insertAtTail(v);
+		return;
+	}
+	XORNode<T>* cur = head;
+	XORNode<T>* prev = nullptr;
+	XORNode<T>* next = nullptr;
+	XORNode<T>* newNode = new XORNode<T>(v);
+	while (cur)
+	{
+		if (cur->value == k)
+		{
+			next = XOR(prev, cur->ptr);
+			newNode->ptr = XOR(cur, next);
+			cur->ptr = XOR(prev, newNode);
+			XORNode <T>* temp = XOR(next->ptr, cur);
+			next->ptr = XOR(temp, newNode);
+			return;
+		}
+		next = XOR(prev, cur->ptr);
+		if (!next)
+			break;
+		prev = cur;
+		cur = next;
+	}
+	insertAtTail(v);
+}
+
+template<class T>
+void XORlinklist<T>::deleteAfter(T k)
+{
+	if (!head)
+	{
+		cout << "head does not exist\n";
+		return;
+	}
+	XORNode<T>* node = search(k);
+}
+template <class T>
+void XORlinklist<T>::deleteBefore(T k)
+{
+	if (!head)
+	{
+		cout << "head does not exist\n";
+		return;
+	}
+	if (head->ptr->value == k)
+		removeAtHead();
+	XORNode<T>* cur = head;
+	XORNode<T>* next = nullptr;
+	XORNode<T>* prev = nullptr;
+	XORNode<T>* prev2 = nullptr;
+	while (cur)
+	{
+		if (cur->value == k)
+		{
+			next = XOR(prev, cur->ptr);
+			prev2 = XOR(cur, prev->ptr);
+			cur->ptr = XOR(next, prev2);
+			prev2->ptr = XOR(XOR(prev2->ptr, prev), cur);
+			delete prev;
+			prev = nullptr;
+			return;
+		}
+		next = XOR(prev, cur->ptr);
+		if (!next)
+			break;
+		prev = cur;
+		cur = next;
+	}
+}
+template<class T>
+void XORlinklist<T>::removeAtTail()
+{
+	if (!head)
+	{
+		cout << "head does not exist\n";
+		return;
+	}
+	XORNode<T>* cur = head;
+	XORNode<T>* prev = nullptr;
+	while (cur)
+	{
+		XORNode<T>* temp = XOR(prev, cur->ptr);
+		if (!temp)
+			break;
+		prev = cur;
+		cur = temp;
+	}
+	XORNode<T>* prev2 = XOR(cur, prev->ptr);
+	prev->ptr = XOR(prev2, nullptr);
+	tail = prev;
+	delete cur;
+	cur = nullptr;
+}
+template<class T>
+void XORlinklist<T>::insertAtTail(T val)
+{
+	XORNode<T>* node = new XORNode<T>(val);
+	if (!head)
+	{
+		head = node;
+		node->ptr = nullptr;
+		tail = node;
+		return;
+	}
+	XORNode<T>* cur = head;
+	XORNode<T>* prev = nullptr;
+	while (cur)
+	{
+		XORNode<T>* temp = XOR(prev , cur->ptr);
+		if (!temp)
+			break;
+		prev = cur;
+		cur = temp;
+	}
+	cur->ptr = XOR(prev , node);
+	node->ptr = XOR(cur , nullptr);
+	tail = node;
+}
+template<class T>
+void XORlinklist<T>::insertAtHead(T val)
+{
+	XORNode<T>* newNode = new XORNode<T>(val);
+	XORNode<T>* node = head;
+	if (!head)
+	{
+		head = newNode;
+		newNode->ptr = XOR(nullptr,nullptr);
+		return;
+	}
+	newNode->ptr = XOR(nullptr, node);
+	head = newNode;
+	node->ptr = XOR(newNode, node->ptr);
+}
+template<class T>
+void XORlinklist<T>::removeAtHead()
+{
+	if (!head)
+		return;
+	XORNode<T>* node = head;
+	head = XOR(nullptr, node->ptr);
+	if (head)
+	{
+		XORNode<T>* node2 = head;
+		XORNode<T>* temp = XOR(node, node2->ptr);
+		node2->ptr = XOR(nullptr, temp);
+	}
+}
+template<class T>
+XORNode<T>* XORlinklist<T>::search(T k)
+{
+	if (!head)
+		return nullptr;
+	XORNode<T>* node = head;
+	XORNode<T>* prev = nullptr;
+
+	while (node)
+	{
+		if (node->value == k)
+			return node;
+		XORNode<T>* temp = XOR(prev, node->ptr);
+		if (!temp)
+			break;
+		prev = node;
+		node = temp;
+	}
+	return nullptr;
+}
+template<class T>
+void XORlinklist<T>::printList()
+{
+	XORNode<T>* node = head;
+	XORNode<T>* prev = nullptr;
+	while (node)
+	{
+		cout << node->value << " : ";
+		XORNode<T>* temp = XOR(prev, node->ptr);
+		if (!temp)
+			break;
+		prev = node;
+		node = temp;
+	}
+	cout << endl;
+}
+
+
+#endif // !XOR_H

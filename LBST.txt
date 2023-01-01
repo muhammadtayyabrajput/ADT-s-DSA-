@@ -1,0 +1,409 @@
+#pragma once
+#ifndef BST_H
+
+#include<iostream>
+#include<stack>
+#include<vector>
+
+using namespace std;
+
+template<class T>
+class BST;
+template<class T>
+class BSTNode
+{
+	T value;
+	BSTNode* right;
+	BSTNode* left;
+	friend BST<T>;
+public:
+	BSTNode() :value(0), right(nullptr), left(nullptr)
+	{}
+};
+
+template<class T>
+class BST
+{
+private:
+	BSTNode<T>* root;
+	int count;
+
+	void insertNode(BSTNode<T>*&, BSTNode<T>*&);
+	void preOrder(BSTNode<T>*) const;
+	void postOrder(BSTNode<T>*) const;
+	void InOrder(BSTNode<T>*) const;
+	void deleteN(T, BSTNode<T>*&);
+	void makeDeletion(BSTNode<T>*&);
+	void printPattern(BSTNode<T>* node, int s, int c)
+	{
+		if (!node)
+			return;
+		s += c;
+		printPattern(node->right, s, c);
+		for (int i = c; i < s; i++)
+			cout << " ";
+		cout << node->value << endl << endl;
+		printPattern(node->left, s, c);
+	}
+	int getH(BSTNode<T>* node, int s)
+	{
+		if (!node)
+			return s;
+		getH(node->left, s++);
+		getH(node->right, s++);
+	}
+public:
+	BST() :root(nullptr), count(0)
+	{}
+	~BST()
+	{
+		root->left = nullptr;
+		root->right = nullptr;
+		delete root;
+		root = nullptr;
+	}
+	BST(const BST<T>& rhs)
+	{
+		root = rhs.root;
+		count = rhs.count;
+	}
+	void setRoot(T val)
+	{
+		BSTNode<T>* node = new BSTNode<T>;
+		node->value = val;
+		node->right = node->left = nullptr;
+		root = node;
+		count++;
+	}
+	BSTNode<T>* getRoot()
+	{
+		if (root)
+			return root;
+		else
+			return nullptr;
+	}
+	void insert(T);
+	void displayPreOrder()const
+	{
+		preOrder(root);
+	}
+	void displayPostOrder()const
+	{
+		postOrder(root);
+	}
+	void displayInOrder()const
+	{
+		InOrder(root);
+	}
+	void remove(T val)
+	{
+		deleteNode(val, root);
+	}
+	BSTNode<T>* search(T);
+	void printNodes(BSTNode<T>* root)
+	{
+		preOrder(root);
+	}
+	T findMin();
+	T findMax();
+	BSTNode<T>* getLeftChild(BSTNode<T>* node)
+	{
+		if (!node)
+			return nullptr;
+		return node->left;
+	}
+	BSTNode<T>* getRightChild(BSTNode<T>* node)
+	{
+		if (!node)
+			return nullptr;
+		return node->right;
+	}
+	T returnValue(BSTNode<int>* node)
+	{
+		if (!node)
+			return 0;
+		return node->value;
+	}
+	int getNodeCount(BST<T>* tree)
+	{
+		return tree->count;
+	}
+	bool isEqual(BSTNode<T>*, BSTNode<T>*);
+	bool isBST(BSTNode<T>*);
+	bool isInternalNode(BSTNode<T>* node)
+	{
+		return (node->left || node->right);
+	}
+	bool isExternalNode(BSTNode<T>* node)
+	{
+		return !(node->left || node->right);
+	}
+	void displayDescedents(T);
+	void displayAncesters(T);
+	BST<T> getMirrorImage();
+	void insertReverse(BSTNode<T>*);
+	void deleteNode(BSTNode<T>* node)
+	{
+		deleteN(node->value, root);
+	}
+	
+	void printTree()
+	{
+		printPattern(root, 0, 10);
+	}
+	
+	int getHeight()
+	{
+		return max(getH(root->left, 0), getH(root->right, 0)) + 1;
+	}
+
+	T findMaxMin(int);
+
+	BST<T>* returnTree()
+	{
+		return this;
+	}
+	void insertInVector(BSTNode<T>*, vector<int>&);
+};
+
+//----------------private-member-functions---------
+template<class T>
+void BST<T>::insertNode(BSTNode<T>*& nodePtr, BSTNode<T>*& newNode)
+{
+	if (nodePtr == nullptr)
+		nodePtr = newNode;
+	else if (newNode->value < nodePtr->value)
+		insertNode(nodePtr->left, newNode);
+	else
+		insertNode(nodePtr->right, newNode);
+}
+template<class T>
+void BST<T>::preOrder(BSTNode<T>* nodePtr) const
+{
+	if (nodePtr)
+	{
+		cout << nodePtr->value << " : ";
+		preOrder(nodePtr->left);
+		preOrder(nodePtr->right);
+	}
+}
+template<class T>
+void BST<T>::postOrder(BSTNode<T>* nodePtr) const
+{
+	if (nodePtr)
+	{
+		postOrder(nodePtr->left);
+		postOrder(nodePtr->right);
+		cout << nodePtr->value << " : ";
+	}
+}
+template<class T>
+void BST<T>::InOrder(BSTNode<T>* nodePtr) const
+{
+	if (nodePtr)
+	{
+		InOrder(nodePtr->left);
+		cout << nodePtr->value << " : ";
+		InOrder(nodePtr->right);
+	}
+}
+template<class T>
+void BST<T>::makeDeletion(BSTNode<T>*& nodePtr)
+{
+	BSTNode<T>* temp = nullptr;
+	if (nodePtr == nullptr)
+	{
+		cout << "can't delete this node\n";
+	}
+	else if (nodePtr->right == nullptr)
+	{
+		temp = nodePtr;
+		nodePtr = nodePtr->left;
+		delete temp;
+		temp = nullptr;
+	}
+	else if (nodePtr->left == nullptr)
+	{
+		temp = nodePtr;
+		nodePtr = nodePtr->right;
+		delete temp;
+		temp = nullptr;
+	}
+	else
+	{
+		temp = nodePtr->right;
+		while (temp->left)
+			temp = temp->left;
+		temp->left = nodePtr->left;
+		temp = nodePtr;
+		nodePtr = nodePtr->right;
+		delete temp;
+		temp = nullptr;
+	}
+	count--;
+}
+template<class T>
+void BST<T>::deleteN(T val, BSTNode<T>*& node)
+{
+	if (val < node->value)
+		deleteN(val, node->left);
+	else if (val > node->value)
+		deleteN(val, node->right);
+	else
+		makeDeletion(node);
+}
+
+
+//-----------------public-member-function-------
+template<class T>
+void BST<T>::insert(T val)
+{
+	BSTNode<T>* newNode = nullptr;
+	newNode = new BSTNode<T>;
+	newNode->value = val;
+	newNode->right = newNode->left = nullptr;
+
+	insertNode(root, newNode);
+	count++;
+}
+template<class T>
+BSTNode<T>* BST<T>::search(T val)
+{
+	BSTNode<T>* nodePtr = root;
+	while (nodePtr)
+	{
+		if (nodePtr->value == val)
+			return nodePtr;
+		else if (val < nodePtr->value)
+			nodePtr = nodePtr->left;
+		else
+			nodePtr = nodePtr->right;
+	}
+	return nullptr;
+}
+template<class T>
+T BST<T>::findMin()
+{
+	BSTNode<T>* node = root;
+	T val;
+	while (node)
+	{
+		val = node->value;
+		node = node->left;
+	}
+	return val;
+}
+template<class T>
+T BST<T>::findMax()
+{
+	BSTNode<T>* node = root;
+	T val;
+	while (node)
+	{
+		val = node->value;
+		node = node->right;
+	}
+	return val;
+}
+template<class T>
+T BST<T>::findMaxMin(int flag)
+{
+	if (flag == 0)
+		return findMin();
+	else
+		return findMax();
+}
+template<class T>
+void BST<T>::insertInVector(BSTNode<T>* node, vector<int>& v1)
+{
+	if (!node)
+		return;
+	insertInVector(node->left,v1);
+	v1.push_back(node->value);
+	insertInVector(node->right,v1);
+}
+template<class T>
+bool BST<T>::isBST(BSTNode<T>* node)
+{
+	vector<int>v;
+	insertInVector(node, v);
+	bool flag = true;
+	for (int i = 1; i < v.size()-1; i+=2)
+	{
+		if (v[i] > v[i - 1])
+			flag = true;
+		else
+			return false;
+	}
+	return true;
+}
+
+template<class T>
+bool BST<T>::isEqual(BSTNode<T>* node1, BSTNode<T>* node2)
+{
+	if (node1 == nullptr && node2 == nullptr)
+		return true;
+	if (node1 == nullptr || node2 == nullptr)
+		return false;
+	else
+	{
+		if ((node1->value == node2->value) && isEqual(node1->left, node2->left) &&
+			isEqual(node1->right, node2->right))
+			return true;
+		else
+			return false;
+	}
+}
+template<class T>
+void BST<T>::displayDescedents(T val)
+{
+	BSTNode<T>* node = search(val);
+	preOrder(node);
+}
+template<class T>
+void BST<T>::displayAncesters(T v)
+{
+	BSTNode<T>* node = root;
+	while (node)
+	{
+		if (v < node->value)
+		{
+			cout << node->value << " : ";
+			node = node->left;
+		}
+		else if (v > node->value)
+		{
+			cout << node->value << " : ";
+			node = node->right;
+		}
+		else
+		{
+			cout << node->value << endl;
+			return;
+		}
+	}
+}
+template<class T>
+void BST<T>::insertReverse(BSTNode<T>* node)
+{
+	if (node == nullptr)
+		return;
+	else
+	{
+		BSTNode<T>* temp = nullptr;
+		insertReverse(node->left);
+		insertReverse(node->right);
+		temp = node->left;
+		node->left = node->right;
+		node->right = temp;
+	}
+}
+template<class T>
+BST<T> BST<T>::getMirrorImage()
+{
+	insertReverse(root);
+	return *this;
+}
+
+
+#endif // !BST_H

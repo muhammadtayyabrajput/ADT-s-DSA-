@@ -1,0 +1,190 @@
+#include<iostream>
+
+using namespace std;
+
+template<class T>
+class Queue
+{
+protected:
+	T* qArr;
+	int qSize;
+	int numItems;
+	int rear;
+	int front;
+public:
+	Queue();
+	Queue(int);
+	Queue(const Queue<T>&);
+	~Queue();
+	void EnQueue(T);
+	T DeQueue();
+	bool isFull();
+	bool isEmpty();
+	void clear();
+	void ShowStructure();
+	void push(T);
+	T pop();
+};
+template<class T>
+Queue<T>::Queue()
+{
+	qArr = new T[5];
+	qSize = 5;
+	rear = -1;
+	front = -1;
+	numItems = 0;
+}
+template<class T>
+Queue<T>::Queue(int s)
+{
+	qArr = new T[s];
+	qSize = s;
+	rear = -1;
+	front = -1;
+	numItems = 0;
+}
+template<class T>
+Queue<T>::Queue(const Queue<T>& cpy)
+{
+	qArr = nullptr;
+	qSize = cpy.qSize;
+	qArr = new T[qSize]{ 0 };
+        for(int i=0 ; i < cpy.qSize ; i++)
+        {
+           qArr[i]=cpy.qArr[i];
+        }      
+	rear = cpy.rear;
+	front = cpy.front;
+}
+template<class T>
+Queue<T>::~Queue()
+{
+	if (qArr != nullptr)
+	{
+		delete[] qArr;
+		qArr = nullptr;
+	}
+}
+template<class T>
+T Queue<T>::DeQueue()
+{
+	if (isEmpty())
+	{
+		cout << "Queue is empty\n";
+	}
+	else
+	{
+		front = (front + 1) % qSize;
+		numItems--;
+		return qArr[front];
+	}
+}
+template<class T>
+void Queue<T>::EnQueue(T val)
+{
+	if (isFull())
+	{
+		cout << "Queue is Full\n";
+	}
+	else
+	{
+		rear = (rear + 1) % qSize;
+		qArr[rear] = val;
+		numItems++;
+	}
+}
+template<class T>
+void Queue<T>::push(T vl)
+{
+	if (isFull())
+	{
+		cout << "Queue is Full\n";
+	}
+	else
+	{
+		front = (front + 1) % qSize;
+		qArr[front] = vl;
+		rear++;
+		numItems++;
+	}
+}
+template<class T>
+T Queue<T>::pop()
+{
+	if (isEmpty())
+	{
+		cout << "Queue is Empty\n";
+	}
+	else
+	{
+		numItems--;
+		return qArr[rear--];
+	}
+}
+template<class T>
+bool Queue<T>::isFull()
+{
+	if (numItems == qSize)
+		return true;
+	else
+		return false;
+}
+template<class T>
+bool Queue<T>::isEmpty()
+{
+	if (numItems)
+		return false;
+	else
+		return true;
+}
+template<class T>
+void Queue<T>::clear()
+{
+	front = qSize - 1;
+	rear = qSize - 1;
+	numItems = 0;
+}
+template<class T>
+void Queue<T>::ShowStructure()
+{
+	int i = front+1;
+	int j = rear;
+	while(i>=front+1 && i<=j)
+	{
+		cout << qArr[i];
+		if (i == j)
+			cout << "\t<--rear\n";
+		i++;
+		cout << endl;
+	} 
+}
+int main()
+{
+	/*Queue<int>q(4);
+	q.EnQueue(1);
+	q.EnQueue(2);
+	q.ShowStructure();
+
+	cout << endl;
+
+	q.EnQueue(3);
+	q.EnQueue(4);
+	q.ShowStructure();
+
+	cout << endl;
+	
+	q.DeQueue();
+	q.DeQueue();
+	q.ShowStructure();*/
+
+	Queue<int>obj(4);
+	obj.push(1);
+	obj.push(2);
+	obj.push(3);
+
+	cout << obj.pop() << endl;
+	cout << obj.pop() << endl;
+	cout << obj.pop() << endl;
+
+	return 0;
+}

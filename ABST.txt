@@ -1,0 +1,155 @@
+//#include<iostream>
+//#include<math.h>
+//
+//using namespace std;
+//
+//template<class T>
+//class ArrayBinaryTree
+//{
+//private:
+//	int maxHeight;
+//	int maxNode;
+//	T* data;
+//	bool* nodeStatus;
+//	void VLR(int i)
+//	{
+//		if (nodeStatus[i])
+//			cout << data[i] << " : ";
+//		if (2 * i + 1 < maxNode && nodeStatus[2 * i + 1] == true)
+//			VLR(2 * i + 1);
+//		if (2 * i + 2 < maxNode && nodeStatus[2 * i * 2] == true)
+//			VLR(2 * i + 2);
+//	}
+//	void LVR(int i)
+//	{
+//		if (2 * i + 1 < maxNode && nodeStatus[2 * i + 1] == true)
+//			LVR(2 * i + 1);
+//		if (nodeStatus[i])
+//			cout << data[i] << " : ";
+//		if (2 * i + 2 < maxNode && nodeStatus[2 * i * 2] == true)
+//			LVR(2 * i + 2);
+//	}
+//	void LRV(int i)
+//	{
+//		if (2 * i + 1 < maxNode && nodeStatus[2 * i + 1] == true)
+//			LRV(2 * i + 1);
+//		if (2 * i + 2 < maxNode && nodeStatus[2 * i * 2] == true)
+//			LRV(2 * i + 2);
+//		if (nodeStatus[i])
+//			cout << data[i] << " : ";
+//	}
+//	int search(T key, int i)
+//	{
+//		int res = -1;
+//		if (data[i] == key)
+//			res = i;
+//		if (res == -1 && 2 * i + 1 < maxNode && nodeStatus[2 * i + 1] == true)
+//			res = search(key, 2 * i + 1);
+//		if (res == -1 && 2 * i + 2 < maxNode && nodeStatus[2 * i * 2] == true)
+//			res = search(key, 2 * i + 2);
+//		return res;
+//	}
+//public:
+//	ArrayBinaryTree(int h)
+//	{
+//		maxHeight = h;
+//		maxNode = pow(2, maxHeight) - 1;
+//		data = new T[maxNode];
+//		nodeStatus = new bool [maxNode];
+//		for (int i = 0; i < maxNode; i++)
+//			nodeStatus[i] = false;
+//	}
+//	void setRoot(T par)
+//	{
+//		data[0] = par;
+//		nodeStatus[0] = true;
+//	}
+//	void setLeftChild(T par, T ch)
+//	{
+//		int index = search(par, 0);
+//		if (index == -1)
+//			return;
+//		if (2 * index + 1 < maxNode)
+//		{
+//			data[2 * index + 1] = ch;
+//			nodeStatus[2 * index + 1] = true;
+//		}
+//	}
+//	void setRightChild(T par, T ch)
+//	{
+//		int index = search(par, 0);
+//		if (index == -1)
+//			return;
+//		if (2 * index + 2 < maxNode)
+//		{
+//			data[2 * index + 2] = ch;
+//			nodeStatus[2 * index + 2] = true;
+//		}
+//	}
+//	void preOrder()
+//	{
+//		VLR(0);
+//	}
+//	void inOrder()
+//	{
+//		LVR(0);
+//	}
+//	void postOrder()
+//	{
+//		LRV(0);
+//	}
+//	void lvlOrder()
+//	{
+//		int i = 0;
+//		while (nodeStatus[i])
+//		{
+//			cout << data[i] << " : ";
+//			i++;
+//		}
+//		cout << endl;
+//	}
+//	void displayDescendents(T node)
+//	{
+//		int index = search(node, 0);
+//		if (index == -1)
+//			return;
+//		VLR(index);
+//		cout << endl;
+//	}
+//	void displayAncester(T node)
+//	{
+//		int index = search(node, 0);
+//		if (index == -1)
+//			return;
+//		int i = index;
+//		while (i != 0)
+//		{
+//			if (i % 2 == 0)
+//			{
+//				i = i / 2 - 1;
+//				cout << data[i] << " : ";
+//			}
+//			else
+//			{
+//				i = i / 2;
+//				cout << data[i] << " : ";
+//			}
+//		}
+//	}
+//};
+//
+//
+//int main()
+//{
+//	ArrayBinaryTree<char>obj(5);
+//	obj.setRoot('A');
+//	obj.setLeftChild('A', 'B');
+//	obj.setRightChild('A', 'C');
+//	obj.setRightChild('B', 'L');
+//	obj.setLeftChild('B', 'M');
+//
+//	obj.displayAncester('A');
+//	cout << endl;
+//
+//	return 0;
+//}

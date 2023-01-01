@@ -1,0 +1,410 @@
+//
+//#include<iostream>
+//using namespace std;
+//
+//template<class T>
+//class ListNode
+//{
+//public:
+//	T value;
+//	ListNode<T>* next;
+//	ListNode<T>* prev;
+//	ListNode(T v)
+//	{
+//		value = v;
+//		next = nullptr;
+//		prev = nullptr;
+//	}
+//};
+//
+//template<class T>
+//class Dlinklist
+//{
+//private:
+//	int count;
+//	ListNode<T>* head;
+//	ListNode<T>* last;
+//public:
+//	Dlinklist()
+//	{
+//		head = nullptr;
+//		last = nullptr;
+//		count = 0;
+//	}
+//	Dlinklist<T>& operator=(const Dlinklist<T>&);
+//	bool isEmpty()const;
+//	void destroy();
+//	int length()const;
+//	void display()const;
+//	void reverseList()const;
+//	bool search(const T)const;
+//	T front()const;
+//	T lastnode()const;
+//	void insertNode(T);
+//	void deleteNode(T);
+//	void insertAtHead(T);
+//	void deleteAtHead();
+//	bool insertAfter(T);
+//	bool deleteAfter(T);
+//	ListNode<T>* getHead();
+//	ListNode<T>* getTail();
+//	ListNode<T>* getNode(int n);
+//	~Dlinklist();
+//};
+//template<class T>
+//Dlinklist<T>& Dlinklist<T>::operator=(const Dlinklist<T>& rhs)
+//{
+//	if (this != &rhs)
+//	{
+//		destroy();
+//
+//		if (rhs.head == NULL) {
+//			head = NULL;
+//			last = NULL;
+//		}
+//		else
+//		{
+//			ListNode<T>* temp = rhs.head;
+//			while (temp != nullptr)
+//			{
+//				insertNode(temp->value);
+//				temp = temp->next;
+//			}
+//			delete temp;
+//			temp = nullptr;
+//		}
+//	}
+//	return *this;
+//}
+//template<class T>
+//Dlinklist<T>::~Dlinklist()
+//{
+//	ListNode<T>* temp;
+//	while (head != nullptr)
+//	{
+//		temp = head;
+//		head = head->next;
+//		delete temp;
+//	}
+//	last = nullptr;
+//	count = 0;
+//}
+//template<class T>
+//bool Dlinklist<T>::isEmpty()const
+//{
+//	if (!head)
+//		return true;
+//	else
+//		return false;
+//}
+//template<class T>
+//ListNode<T>* Dlinklist<T>::getNode(int n)
+//{
+//	if (!head)
+//		return nullptr;
+//	if (n > count)
+//	{
+//		return last;
+//	}
+//	ListNode<T>* nodePtr = head;
+//	int i = 1;
+//	while (nodePtr != nullptr && i < n)
+//	{
+//		nodePtr = nodePtr->next;
+//		i++;
+//	}
+//	if (i == n)
+//	{
+//		return nodePtr;
+//	}
+//	else
+//	{
+//		return nullptr;
+//	}
+//}
+//template<class T>
+//ListNode<T>* Dlinklist<T>::getHead()
+//{
+//	return head;
+//}
+//template<class T>
+//ListNode<T>* Dlinklist<T>::getTail()
+//{
+//	return last;
+//}
+//template<class T>
+//void Dlinklist<T>::destroy()
+//{
+//	ListNode<T>* temp;
+//	while (head != nullptr)
+//	{
+//		temp = head;
+//		head = head->next;
+//		delete temp;
+//	}
+//	last = nullptr;
+//	count = 0;
+//}
+//template<class T>
+//int Dlinklist<T>::length()const
+//{
+//	return count;
+//}
+//template<class T>
+//void Dlinklist<T>::display()const
+//{
+//	ListNode<T>* nodePtr = head;
+//	while (nodePtr != nullptr)
+//	{
+//		cout << nodePtr->value << endl;
+//		nodePtr = nodePtr->next;
+//	}
+//}
+//template<class T>
+//void Dlinklist<T>::reverseList()const
+//{
+//	ListNode<T>* nodePtr = last;
+//	while (nodePtr != nullptr)
+//	{
+//		cout << nodePtr->value << endl;
+//		nodePtr = nodePtr->prev;
+//	}
+//}
+//template<class T>
+//bool Dlinklist<T>::search(const T v)const
+//{
+//	ListNode<T>* nodePtr = head;
+//	if (!head)
+//		return 0;
+//	if (nodePtr->value == v)
+//	{
+//		return true;
+//	}
+//	while (nodePtr->value != v)
+//	{
+//		nodePtr = nodePtr->next;
+//	}
+//	if (nodePtr->value == v)
+//	{
+//		return true;
+//	}
+//	else
+//	{
+//		return false;
+//	}
+//}
+//template<class T>
+//T Dlinklist<T>::front()const
+//{
+//	//assert(head != nullptr);
+//	return head->value;
+//}
+//template<class T>
+//T Dlinklist<T>::lastnode()const
+//{
+//	//assert(last != nullptr);
+//	return last->value;
+//}
+//template<class T>
+//void Dlinklist<T>::insertNode(T v)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(v);
+//	ListNode<T>* nodePtr = head;
+//	if (!head)
+//	{
+//		head = newNode;
+//		last = newNode;
+//		count++;
+//		return;
+//	}
+//	while (nodePtr->next != nullptr)
+//	{
+//		nodePtr = nodePtr->next;
+//	}
+//	if (nodePtr->next == nullptr)
+//	{
+//		nodePtr->next = newNode;
+//		newNode->prev = nodePtr;
+//		newNode->next = nullptr;
+//		last = newNode;
+//		count++;
+//	}
+//}
+//template<class T>
+//void Dlinklist<T>::deleteNode(T v)
+//{
+//	ListNode<T>* nodePtr;
+//	ListNode<T>* prevNode;
+//	if (!head)
+//	{
+//		cout << "Not possible : list is empty\n";
+//		return;
+//	}
+//	if (head->value == v)
+//	{
+//		nodePtr = head;
+//		head = head->next;
+//		if (head->next != nullptr)
+//			nodePtr->prev = nullptr;
+//		else
+//			last = nullptr;
+//		count--;
+//		delete nodePtr;
+//	}
+//	else
+//	{
+//		nodePtr = head;
+//		while (nodePtr->value != v && nodePtr != nullptr)
+//		{
+//			nodePtr = nodePtr->next;
+//		}
+//		if (nodePtr->value == v)
+//		{
+//			prevNode = nodePtr->prev;
+//			prevNode->next = nodePtr->next;
+//			if (nodePtr->next != nullptr)
+//				nodePtr->next->prev = prevNode;
+//			if (nodePtr == last)
+//				last = prevNode;
+//			delete nodePtr;
+//			count--;
+//		}
+//	}
+//}
+//template<class T>
+//void Dlinklist<T>::insertAtHead(T v)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(v);
+//	ListNode<T>* nodePtr;
+//	if (!head)
+//	{
+//		head = newNode;
+//		newNode->next = nullptr;
+//		newNode->prev = nullptr;
+//		last = nullptr;
+//		count++;
+//	}
+//	else
+//	{
+//		nodePtr = head;
+//		newNode->next = nodePtr;
+//		nodePtr->prev = newNode;
+//		head = newNode;
+//		count++;
+//	}
+//}
+//template<class T>
+//void Dlinklist<T>::deleteAtHead()
+//{
+//	ListNode<T>* nodePtr = head;
+//	ListNode<T>* node;
+//	if (!head)
+//	{
+//		cout << "Head not found\n";
+//		return;
+//	}
+//	else if (nodePtr->next != nullptr)
+//	{
+//		node = nodePtr->next;
+//		delete nodePtr;
+//		node->prev = nullptr;
+//		head = node;
+//		count--;
+//	}
+//	else
+//	{
+//		delete nodePtr;
+//		head = nullptr;
+//		count--;
+//	}
+//}
+//template<class T>
+//bool Dlinklist<T>::insertAfter(T v)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(v);
+//	ListNode<T>* nodePtr = head;
+//	if (!head)
+//		return false;
+//	while (nodePtr->value != v && nodePtr->next != nullptr)
+//	{
+//		nodePtr = nodePtr->next;
+//	}
+//	if (nodePtr->value == v && nodePtr->next != nullptr)
+//	{
+//		nodePtr->next->prev = newNode;
+//		newNode->prev = nodePtr;
+//		newNode->next = nodePtr->next;
+//		nodePtr->next = newNode;
+//		count++;
+//		return true;
+//	}
+//	else if (nodePtr->value == v && nodePtr->next == nullptr)
+//	{
+//		nodePtr->next = newNode;
+//		newNode->prev = nodePtr;
+//		newNode->next = nullptr;
+//		last = newNode;
+//		count++;
+//		return true;
+//	}
+//	else
+//	{
+//		return false;
+//	}
+//}
+//template<class T>
+//bool Dlinklist<T>::deleteAfter(T v)
+//{
+//	ListNode<T>* nodePtr = head;
+//	ListNode<T>* delnode;
+//	if (!head)
+//	{
+//		return false;
+//	}
+//	else
+//	{
+//		while (nodePtr->value != v && nodePtr->next != nullptr)
+//		{
+//			nodePtr = nodePtr->next;
+//		}
+//		if (nodePtr->value == v && nodePtr->next != nullptr && nodePtr->next->next != nullptr)
+//		{
+//			delnode = nodePtr->next;
+//			nodePtr->next = delnode->next;
+//			delnode->next->prev = nodePtr;
+//			delete delnode;
+//			count--;
+//			return true;
+//		}
+//		else if (nodePtr->value == v && nodePtr->next != nullptr && nodePtr->next->next == nullptr)
+//		{
+//			delnode = nodePtr->next;
+//			delete delnode;
+//			nodePtr->next = nullptr;
+//			last = nodePtr;
+//			count--;
+//			return true;
+//		}
+//		else if (nodePtr->next == nullptr)
+//		{
+//			return false;
+//		}
+//	}
+//}
+//int main()
+//{
+//	Dlinklist<int>list;
+//	list.insertNode(1);
+//	list.insertNode(2);
+//	list.insertNode(3);
+//	list.insertNode(4);
+//	list.display();
+//	cout << "length : " << list.length() << endl << endl;
+//
+//	ListNode<int>* ptr = list.getTail();
+//	cout << ptr->value << endl;
+//	cout << "length : " << list.length() << endl;
+//
+//
+//	return 0;
+//}

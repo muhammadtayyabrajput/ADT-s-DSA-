@@ -1,0 +1,249 @@
+//#include<iostream>
+//using namespace std;
+//
+//template<class T>
+//class ListNode
+//{
+//public:
+//	T value;
+//	ListNode<T>* next;
+//	ListNode<T>* prev;
+//	ListNode(T v)
+//	{
+//		value = v;
+//		next = nullptr;
+//		prev = nullptr;
+//	}
+//};
+//
+//template<class T>
+//class CDLL
+//{
+//private:
+//	int count;
+//	ListNode<T>* head;
+//public:
+//	CDLL()
+//	{
+//		head = nullptr;
+//		count = 0;
+//	}
+//	//Dlinklist<T>& operator=(const Dlinklist<T>&);
+//	bool isEmpty()const;
+//	//void destroy();
+//	int length()const;
+//	void display()const;
+//	int noofElements()const;
+//	/*void reverseList()const;
+//	bool search(const T)const;
+//	T front()const;
+//	T lastnode()const;*/
+//	void insertAtTail(T);
+//	void insertAtHead(T);
+//
+//	void insertAfter(T,T);
+//	void deleteAfter(T);
+//	void deleteNode(T);
+//	void deleteAtHead();
+//	~CDLL();
+//};
+//template<class T>
+//void CDLL<T>::insertAtTail(T v)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(v);
+//	if (!head)
+//	{
+//		head = newNode;
+//		head->next = head->prev = head;
+//		return;
+//	}
+//	head->prev->next = newNode;
+//	newNode->next = head;
+//	newNode->prev = head->prev;
+//	head->prev = newNode;
+//}
+//template<class T>
+//void CDLL<T>::display() const
+//{
+//	if (!head)
+//		return;
+//	ListNode<T>* nodePtr = head;
+//	do
+//	{
+//		cout << nodePtr->value << " : ";
+//		nodePtr = nodePtr->next;
+//	} while (nodePtr != head);
+//	cout << endl;
+//}
+//template<class T>
+//bool CDLL<T>::isEmpty()const
+//{
+//	if (!head)
+//		return true;
+//	else
+//		return false;
+//}
+//template<class T>
+//int CDLL<T>::length()const
+//{
+//	return (count - 1);
+//}
+//template<class T>
+//int CDLL<T>::noofElements() const
+//{
+//	return count;
+//}
+//template<class T>
+//void CDLL<T>::insertAtHead(T val)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(val);
+//	if (!head)
+//	{
+//		head = newNode;
+//		head->next = head->prev = head;
+//		return;
+//	}
+//	newNode->next = head;
+//	newNode->prev = head->prev;
+//	head->prev->next = newNode;
+//	head->prev = newNode;
+//	head = newNode;
+//}
+//template<class T>
+//void CDLL<T>::insertAfter(T k,T val)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(val);
+//	if (!head)
+//	{
+//		head = newNode;
+//		head->next = head->prev = head;
+//		return;
+//	}
+//	ListNode<T>* nodePtr = head;
+//	do {
+//		if (nodePtr->value == k)
+//		{
+//			if (head->next == head)
+//			{
+//				newNode->next = head;
+//				newNode->prev = head->prev;
+//				head->prev->next = newNode;
+//				head->prev = newNode;
+//				head = newNode;
+//			}
+//			else {
+//				newNode->next = nodePtr->next;
+//				newNode->prev = nodePtr;
+//				nodePtr->next = newNode;
+//				newNode->next->prev = newNode;
+//			}
+//			return;
+//		}
+//		nodePtr = nodePtr->next;
+//	} while (nodePtr != head);
+//}
+//template<class T>
+//void CDLL<T>::deleteAfter(T k)
+//{
+//	if (!head)
+//		return;
+//	ListNode<T>* nodePtr = head;
+//	do
+//	{
+//		if (nodePtr->value == k)
+//		{
+//			if (head == head->prev)//only one node
+//			{
+//				delete head;
+//				head = nullptr;
+//				return;
+//			}
+//			ListNode<T>* nodePtr2 = nodePtr->next;
+//			nodePtr->next = nodePtr2->next;
+//			nodePtr2->next->prev = nodePtr;
+//			delete nodePtr2;
+//			if (nodePtr2 == head) //head node deletion
+//				head = nodePtr->next;
+//			return;
+//		}
+//		nodePtr = nodePtr->next;
+//	} while (nodePtr != head);
+//}
+//template<class T>
+//void CDLL<T>::deleteAtHead()
+//{
+//	if (!head)
+//		return;
+//	ListNode<T>* nodePtr = head;
+//	if (head == head->prev)//only one node
+//	{
+//		delete head;
+//		head = nullptr;
+//		return;
+//	}
+//	else
+//	{
+//		ListNode<T>* node = nullptr;
+//		node = nodePtr->next;
+//		head = node;
+//		node->prev = head;
+//		delete nodePtr;
+//		nodePtr = nullptr;
+//	}
+//}
+//template<class T>
+//void CDLL<T>::deleteNode(T val)
+//{
+//	if (!head)
+//		return;
+//	ListNode<T>* nodePtr = head;
+//	if (nodePtr->value == val)
+//	{
+//		deleteAtHead();
+//		return;
+//	}
+//	do {
+//		if (nodePtr->value == val)
+//		{
+//			if (nodePtr->next != head)
+//			{
+//				ListNode<T>* node2 = nullptr;
+//				node2 = nodePtr->next;
+//				nodePtr->prev->next = node2;
+//				node2->prev = nodePtr->prev;
+//				delete nodePtr;
+//				nodePtr = nullptr;
+//				return;
+//			}
+//			else
+//			{
+//				nodePtr->prev->next = head;
+//				head->prev = nodePtr->prev;
+//				delete nodePtr;
+//				nodePtr = nullptr;
+//				return;
+//			}
+//		}
+//			nodePtr = nodePtr->next;
+//	} while (nodePtr != head);
+//}
+//template<class T>
+//CDLL<T>::~CDLL()
+//{
+//	do {
+//		deleteAtHead();
+//	} while (head != nullptr);
+//}
+//int main()
+//{
+//	CDLL<int>list;
+//	list.insertAtTail(1);
+//	list.insertAtTail(2);
+//	list.insertAtTail(3);
+//	list.display();
+//	list.deleteNode(1);
+//	list.display();
+//	
+//
+//	return 0;
+//}

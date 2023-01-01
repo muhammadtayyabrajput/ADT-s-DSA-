@@ -1,0 +1,128 @@
+#include<iostream>
+using namespace std;
+
+template<class T>
+
+class MaxHeapArray
+{
+private:
+	T* arr;
+	int size;
+	int count;
+public:
+	MaxHeapArray(int h)
+	{
+		size = pow(2, h) - 1;
+		arr = new T[size];
+		count = 0;
+	}
+	void insert(T);
+	void resize()
+	{
+		T* temp = new T[size * 2];
+		for (int i = 0; i < size; i++)
+			temp[i] = arr[i];
+		delete[]arr;
+		arr = temp;
+		temp = nullptr;
+	}
+	void display()
+	{
+		int i = 0;
+		while (i < count)
+		{
+			if (arr[i])
+				cout << arr[i] << " ";
+			i++;
+		}
+	}
+	void deletion();
+	void Heapify();
+};
+template<class T>
+void MaxHeapArray<T>::insert(T val)
+{
+	if (count == size)
+		resize();
+	arr[count++] = val;
+	int c = count - 1;
+	while (c != 0)
+	{
+		int p = c / 2;
+		if (arr[p] < arr[c])
+		{
+			swap(arr[p], arr[c]);
+			c = p;
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+template<class T>
+void MaxHeapArray<T>::deletion()
+{
+	if (count > 0)
+	{
+		swap(arr[0], arr[count - 1]);
+		count--;
+	}
+	else
+		return;
+
+	Heapify();
+}
+template<class T>
+void MaxHeapArray<T>::Heapify()
+{
+	int i = 0;
+	int l = 0, r = 0;
+	while (i < count)
+	{
+		l = 2 * i + 1;
+		r = 2 * i + 2;
+		int p = i;
+		if (l < count || r < count)
+		{
+			if (arr[p] < arr[l])
+			{
+				swap(arr[p], arr[l]);
+				p = l;
+			}
+			else if (arr[p] < arr[r])
+			{
+				swap(arr[i], arr[r]);
+				p = r;
+			}
+			else
+			{
+				break;
+			}
+			i++;
+		}
+		else
+		{
+			break;
+		}
+	}
+}
+
+int main()
+{
+	MaxHeapArray<int>obj(5);
+	obj.insert(8);
+	obj.insert(9);
+	obj.insert(10);
+	obj.insert(11);
+	obj.insert(12);
+	obj.insert(13);
+	obj.display();
+	cout << endl;
+	obj.deletion();
+	obj.display();
+
+	cout << endl;
+
+	return 0;
+}

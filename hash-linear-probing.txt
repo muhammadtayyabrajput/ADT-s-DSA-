@@ -1,0 +1,152 @@
+#pragma once
+#ifndef HASH_H
+
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+class HashTable
+{
+	string* table;
+	int curSize;
+	int size;
+public:
+	HashTable(int s)
+	{
+		size = s;
+		table = new string[size];
+		for (int i = 0; i < size; i++)
+			table[i] = "";
+		curSize = 0;
+	}
+	bool isEmpty()
+	{
+		if (size == 0)
+			return true;
+		else
+			return false;
+	}
+	bool isFull()
+	{
+		if (curSize == size - 1)
+			return true;
+		else
+			return false;
+	}
+	double loadFactor()
+	{
+		return double(curSize / size);
+	}
+	int hashFunction(string);
+	bool insert(string);
+	void reSize();
+	bool remove(string);
+	void display();
+	bool search(string);
+	~HashTable()
+	{
+		delete[]table;
+		table = nullptr;
+		curSize = 0;
+		size = 0;
+	}
+};
+void HashTable::reSize()
+{
+	int s = size * 2;
+	string* temp = new string[s];
+	for (int i = 0; i < size; i++)
+	{
+		temp[i] = table[i];
+	}
+	delete[]table;
+	table = temp;
+	temp = nullptr;
+}
+int HashTable::hashFunction(string s)
+{
+	int sum=0;
+	for (int i = 0; i < s.size(); i++)
+	{
+		sum += int(s[i]);
+	}
+	
+	return (sum % size);
+}
+bool HashTable::insert(string s)
+{
+	if (isEmpty())
+	{
+		table[0] = s;
+		curSize++;
+		return true;
+	}
+	if (isFull())
+	{
+		reSize();
+	}
+	int h = hashFunction(s);
+	if (table[h] == "")
+	{
+		table[h] = s;
+		curSize++;
+		return true;
+	}
+	else
+	{
+		int h2 = 0;
+		for (int i = 0; i < size; i++)
+		{
+			h2 = (hashFunction(s) + i) % 10;
+			if (table[h2] == "")
+			{
+				table[h2] = s;
+				curSize++;
+				return true;
+			}
+		}
+	}
+	cout << "empty slot not found\n";
+	return false;
+}
+bool HashTable::remove(string s)
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (table[i] == s)
+		{
+			table[i] = "";
+			return true;
+		}
+	}
+	cout << "given string not found \n";
+	return false;
+}
+void HashTable::display()
+{
+	for (int i = 0; i < size; i++)
+	{
+		if (table[i] != "")
+		{
+			cout << "key : " << i << "   value  " << table[i] << endl;
+		}
+		else
+		{
+			cout << "key : " << i << "   value  " << "Empty" << endl;
+		}
+	}
+}
+bool HashTable::search(string s)
+{
+	if (isEmpty())
+		return false;
+	for (int i = 0; i < size; i++)
+	{
+		if (table[i] == s)
+			return true;
+	}
+	return false;
+}
+
+#endif // !HASH_H

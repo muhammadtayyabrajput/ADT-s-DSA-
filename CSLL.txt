@@ -1,0 +1,158 @@
+//#include<iostream>
+//using namespace std;
+//
+//template<class T>
+//class ListNode
+//{
+//public:
+//	T value;
+//	ListNode<T>* next;
+//	ListNode(T v)
+//	{
+//		value = v;
+//		next = nullptr;
+//	}
+//};
+//template<class T>
+//class CSLL
+//{
+//private:
+//	ListNode<T>* last;
+//public:
+//	CSLL():last(nullptr)
+//	{}
+//	void insertAtTail(T);
+//	void insertAtHead(T);
+//	void insertAfter(T,T);
+//	void insertBefore(T,T);
+//	void deleteAfter(T);
+//	void deleteBefore(T);
+//	void deleteNode(T);
+//	void displayNode();
+//};
+//template<class T>
+//void CSLL<T>::insertAtTail(T val)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(val);
+//	if (!last)
+//	{
+//		last = newNode;
+//		newNode->next = last;
+//		return;
+//	}
+//	ListNode<T>* nodePtr = last->next;
+//	while (nodePtr != last) 
+//	{
+//		nodePtr = nodePtr->next;
+//	} 
+//	newNode->next = last->next;
+//	nodePtr->next = newNode;
+//	last = newNode;
+//}
+//template<class T>
+//void CSLL<T>::displayNode()
+//{
+//	ListNode<T>* node = last->next;
+//	ListNode<T>* node2 = last->next;
+//	do
+//	{
+//		cout << node->value << " : ";
+//		node = node->next;
+//	} while (node != node2);
+//}
+//template<class T>
+//void CSLL<T>::insertAtHead(T val)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(val);
+//	if (!last)
+//	{
+//		last = newNode;
+//		newNode->next = last;
+//		return;
+//	}
+//	ListNode<T>* nodePtr = last->next;
+//	newNode->next = last->next;
+//	last->next = newNode;
+//}
+//template<class T>
+//void CSLL<T>::insertAfter(T k, T val)
+//{
+//	ListNode<T>* newNode = new ListNode<T>(val);
+//	if (!last)
+//	{
+//		last = newNode;
+//		newNode->next = last;
+//		return;
+//	}
+//	ListNode<T>* nodePtr = last->next;
+//	while (nodePtr->value != k)
+//	{
+//		nodePtr=nodePtr->next;
+//	}
+//	if (nodePtr->value == k)
+//	{
+//		if (nodePtr == last)
+//		{
+//			insertAtTail(val);
+//		}
+//		else
+//		{
+//			newNode->next = nodePtr->next;
+//			nodePtr->next = newNode;
+//		}
+//	}
+//}
+//template<class T>
+//void CSLL<T>::deleteNode(T val)
+//{
+//	if (!last)
+//	{
+//		return;
+//	}
+//	ListNode<T>* nodePtr = last->next;
+//	ListNode<T>* prev=nullptr;
+//	if (nodePtr->value == val)
+//	{
+//		last->next = nodePtr->next;
+//		delete nodePtr;
+//		nodePtr = nullptr;
+//		return;
+//	}
+//	while (nodePtr->value != val)
+//	{
+//		prev = nodePtr;
+//		nodePtr = nodePtr->next;
+//	}
+//	if (nodePtr->value == val)
+//	{
+//		if (nodePtr == last)
+//		{
+//			prev->next = nodePtr->next;
+//			last = prev;
+//			delete nodePtr;
+//			nodePtr = nullptr;
+//		}
+//		else
+//		{
+//			prev->next = nodePtr->next;
+//			delete nodePtr;
+//			nodePtr = nullptr;
+//		}
+//	}
+//}
+//
+//int main()
+//{
+//	CSLL<int>list;
+//	list.insertAtTail(1);
+//	list.insertAtTail(2);
+//	list.insertAtTail(3);
+//	list.insertAtHead(0);
+//	list.deleteNode(0);
+//
+//	list.displayNode();
+//	cout << endl;
+//
+//	return 0;
+//
+//}

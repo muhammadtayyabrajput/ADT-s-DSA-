@@ -1,0 +1,688 @@
+#pragma once
+#ifndef LINK_LIST
+
+#include <iostream>
+#include<stack>
+using namespace std;
+
+template<class T>
+class LinkList;
+
+template<class T>
+class ListNode
+{
+public:
+	friend LinkList<T>;
+	T value;
+	ListNode<T>* next;
+	ListNode(T v)
+	{
+		value = v;
+		next = nullptr;
+	}
+};
+template<class T>
+class LinkList
+{
+private:
+	int count;
+	ListNode<T>* head;
+	ListNode<T>* tail;
+public:
+
+	LinkList()
+	{
+		head = nullptr;
+		count = 0;
+	}
+	~LinkList();
+	LinkList<T>& operator=(const LinkList<T>&);
+	void insertAtTail(T);
+	void insertNode(T);
+	void deleteNode(T);
+	void insertAtHead(T);
+	void deleteAtHead();
+	void deleteAtTail();
+	bool insertBefore(T, T);
+	bool insertAfter(T, T);
+	bool deleteBefore(T);
+	ListNode<T>* getNode(T);
+	bool deleteAfter(T);
+	void printList() ;
+	int getLength();
+	ListNode<T>* search(T);
+	void alternateDeletion();
+
+	T findMiddleNode();
+
+	void insertInOrderedList(T);
+
+	void printListReverse();
+	void reverseList(ListNode<T>*) const;
+	void removeDuplicate();
+	void mergeSortedlist(LinkList<T>&, LinkList<T>&);
+	void mergeList(LinkList<T>&, LinkList<T>&);
+	void reverseListinChunks(LinkList<T>&, int);
+	ListNode<T>* rLC(ListNode<T>*, int);
+};
+template<class T>
+LinkList<T>& LinkList<T>::operator=(const LinkList<T>& rhs)
+{
+	if (this != &rhs)
+	{
+		this->~LinkList();
+
+		if (rhs.head == NULL)
+		{
+			head = NULL;
+			tail = NULL;
+		}
+		else
+		{
+			ListNode<T>* temp = rhs.head;
+			while (temp != nullptr)
+			{
+				insertNode(temp->value);
+				temp = temp->next;
+			}
+			delete temp;
+			temp = nullptr;
+		}
+	}
+	return *this;
+}
+template<class T>
+T LinkList<T>::findMiddleNode()
+{
+	ListNode<T>* node = head;
+	int middle = count / 2;
+	int i = 0;
+	while (i != middle)
+	{
+		node = node->next;
+		i++;
+	}
+	if (i == middle)
+	{
+		return node->value;
+	}
+	return 0;
+}
+template<class T>
+ListNode<T>* LinkList<T>::getNode(T n)
+{
+	if (!head)
+		return nullptr;
+	if (n > count)
+	{
+		return tail;
+	}
+	ListNode<T>* nodePtr = head;
+	int i = 1;
+	while (nodePtr != nullptr && i < n)
+	{
+		nodePtr = nodePtr->next;
+		i++;
+	}
+	if (i == n)
+	{
+		return nodePtr;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+template<class T>
+void LinkList<T>::insertAtTail(T nValue)
+{
+	ListNode<T>* newNode;
+	ListNode<T>* nodePtr;
+	newNode = new ListNode<T>(nValue);
+	if (!head)
+	{
+		head = newNode;
+		count++;
+	}
+	else
+	{
+		nodePtr = head;
+		while (nodePtr->next)
+			nodePtr = nodePtr->next;
+		nodePtr->next = newNode;
+		tail = newNode;
+		count++;
+	}
+}
+template<class T>
+bool LinkList<T>::insertBefore(T v, T key)
+{
+	ListNode<T>* newNode;
+	ListNode<T>* nodePtr;
+	ListNode<T>* prevNode = nullptr;
+	newNode = new ListNode<T>(v);
+	nodePtr = head;
+	while (nodePtr->value != key)
+	{
+		prevNode = nodePtr;
+		nodePtr = nodePtr->next;
+	}
+	if (nodePtr->value == key)
+	{
+		prevNode->next = newNode;
+		newNode->next = nodePtr;
+		count++;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+template<class T>
+bool LinkList<T>::deleteBefore(T k)
+{
+	ListNode<T>* nodePtr = head;
+	ListNode<T>* prevNode = nullptr;
+	ListNode<T>* node = nullptr;
+	if (!head)
+		return false;
+	if (head->value == k)
+	{
+		cout << "not possible\n";
+		return false;
+	}
+	while (nodePtr->value != k)
+	{
+		node = prevNode;
+		prevNode = nodePtr;
+		nodePtr = nodePtr->next;
+	}
+	if (nodePtr->value == k)
+	{
+		delete prevNode;
+		prevNode = node;
+		prevNode->next = nodePtr;
+		count--;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+template<class T>
+bool LinkList<T>::insertAfter(T v, T k)
+{
+	if (!head)
+		return false;
+	ListNode<T>* newNode = new ListNode<T>(v);
+	ListNode<T>* nodePtr = head;
+	ListNode<T>* node = nullptr;
+	while (nodePtr->value != k)
+	{
+		nodePtr = nodePtr->next;
+		node = nodePtr->next;
+	}
+	if (nodePtr->value == k && node != nullptr)
+	{
+		nodePtr->next = newNode;
+		newNode->next = node;
+		count++;
+		return true;
+	}
+	else if (nodePtr->value == k && node == nullptr)
+	{
+		node = nodePtr->next;
+		nodePtr->next = newNode;
+		newNode->next = node;
+		tail = newNode;
+		count++;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+
+}
+template<class T>
+ListNode<T>* LinkList<T>::search(T key)
+{
+	if (!head)
+	{
+		return nullptr;
+	}
+	ListNode<T>* nodePtr = head;
+	while (nodePtr->value != key)
+	{
+		nodePtr = nodePtr->next;
+	}
+	if (nodePtr->value == key)
+	{
+		return nodePtr;
+	}
+	else
+	{
+		return nullptr;
+	}
+}
+template<class T>
+bool LinkList<T>::deleteAfter(T k)
+{
+	ListNode<T>* nodePtr = head;
+	ListNode<T>* node = nullptr;
+	if (!head)
+		return false;
+	while (nodePtr->value != k)
+	{
+		nodePtr = nodePtr->next;
+	}
+	if (nodePtr->next == nullptr)
+		return false;
+	if (nodePtr->value == k && nodePtr->next->next == nullptr)
+	{
+		tail = nodePtr;
+		node = nodePtr->next;
+		nodePtr->next = nullptr;
+		delete node;
+		node = nullptr;
+	}
+	if (nodePtr->value == k)
+	{
+		node = nodePtr->next;
+		nodePtr->next = node->next;
+		delete node;
+		count--;
+		return true;
+	}
+	else
+	{
+		return false;
+	}
+}
+template<class T>
+void LinkList<T>::insertAtHead(T v)
+{
+	ListNode<T>* newNode = new ListNode<T>(v);
+	newNode->next = head;
+	head = newNode;
+	count++;
+}
+template<class T>
+void LinkList<T>::deleteAtHead()
+{
+	ListNode<T>* node;
+	node = head->next;
+	delete head;
+	head = node;
+	count--;
+}
+template<class T>
+void LinkList<T>::deleteAtTail()
+{
+	ListNode<T>* node;
+	ListNode<T>* prevNode = nullptr;
+	node = head;
+	while (node->next)
+	{
+		prevNode = node;
+		node = node->next;
+	}
+	prevNode->next = node->next;
+	tail = prevNode;
+	delete node;
+	count--;
+}
+template<class T>
+void LinkList<T>::insertNode(T nValue)
+{
+	ListNode<T>* nodePtr;
+	ListNode<T>* newNode;
+	ListNode<T>* prevNode = nullptr;
+	newNode = new ListNode<T>(nValue);
+	if (!head)
+	{
+		head = newNode;
+		newNode->next = nullptr;
+		tail = newNode;
+	}
+	else
+	{
+		nodePtr = head;
+		prevNode = nullptr;
+		while (nodePtr != nullptr && nodePtr->value < nValue)
+		{
+			prevNode = nodePtr;
+			nodePtr = nodePtr->next;
+		}
+		if (prevNode == nullptr)
+		{
+			head = newNode;
+			newNode->next = nodePtr;
+		}
+		else
+		{
+			prevNode->next = newNode;
+			newNode->next = nodePtr;
+		}
+	}
+	count++;
+}
+template<class T>
+void LinkList<T>::printList()
+{
+	ListNode<T>* nodePtr;
+	nodePtr = head;
+	while (nodePtr)
+	{
+		cout << nodePtr->value << endl;
+		nodePtr = nodePtr->next;
+	}
+}
+template<class T>
+int LinkList<T>::getLength()
+{
+	return count;
+}
+template<class T>
+void LinkList<T>::deleteNode(T sValue)
+{
+	ListNode<T>* nodePtr;
+	ListNode<T>* prevNode = nullptr;
+	if (!head)
+		return;
+	if (head->value == sValue)
+	{
+		nodePtr = head->next;
+		delete head;
+		head = nodePtr;
+		count--;
+	}
+	else
+	{
+		nodePtr = head;
+		while (nodePtr != nullptr && nodePtr->value != sValue)
+		{
+			prevNode = nodePtr;
+			nodePtr = nodePtr->next;
+		}
+		if (nodePtr->next == nullptr)
+		{
+			deleteAtTail();
+		}
+		if (nodePtr)
+		{
+			prevNode->next = nodePtr->next;
+			delete nodePtr;
+			count--;
+		}
+	}
+}
+template<class T>
+LinkList<T>::~LinkList()
+{
+	ListNode<T>* nodePtr;
+	ListNode<T>* newNode;
+	nodePtr = head;
+	while (nodePtr != nullptr)
+	{
+		newNode = nodePtr->next;
+		delete nodePtr;
+		nodePtr = newNode;
+	}
+	count = 0;
+}
+
+template<class T>
+void LinkList<T>::insertInOrderedList(T v)
+{
+	ListNode<T>* newNode = new ListNode<T>(v);
+	ListNode<T>* nodePtr = head;
+	ListNode<T>* prevNode = nullptr;
+	if (!head)
+	{
+		head = newNode;
+		count++;
+		return;
+	}
+	if (nodePtr->value < v)
+	{
+		while (nodePtr != nullptr)
+		{
+			prevNode = nodePtr;
+			nodePtr = nodePtr->next;
+			if (nodePtr->value == v)
+				break;
+			if (nodePtr->value > v)
+			{
+				prevNode->next = newNode;
+				newNode->next = nodePtr;
+				break;
+			}
+		}
+		count++;
+	}
+	else if (nodePtr->value > v)
+	{
+		while (nodePtr != nullptr)
+		{
+			prevNode = nodePtr;
+			nodePtr = nodePtr->next;
+			if (nodePtr->value == v)
+				break;
+			if (nodePtr->value < v)
+			{
+				prevNode->next = newNode;
+				newNode->next = nodePtr;
+				break;
+			}
+		}
+		count++;
+	}
+	else
+	{
+		return;
+	}
+}
+
+template<class T>
+void LinkList<T>::reverseList(ListNode<T>* nodePtr)const
+{
+	if (nodePtr != nullptr)
+	{
+		reverseList(nodePtr->next);
+		cout << nodePtr->value << endl;
+	}
+}
+template<class T>
+void LinkList<T>::printListReverse()
+{
+	reverseList(head);
+}
+template<class T>
+void LinkList<T>::removeDuplicate()
+{
+	ListNode<T>* nodePtr = head->next;
+	ListNode<T>* prevNode = head;
+	for (int i = 1; i < count; i++)
+	{
+		if (prevNode->value == nodePtr->value)
+		{
+			if (nodePtr->next != nullptr)
+			{
+				prevNode->next = nodePtr->next;
+				delete nodePtr;
+				nodePtr = prevNode->next;
+			}
+			else
+			{
+				prevNode->next = nullptr;
+				delete nodePtr;
+				nodePtr = nullptr;
+			}
+			count = count - 1;
+		}
+		prevNode = prevNode->next;
+		if (nodePtr != nullptr)
+		{
+			nodePtr = nodePtr->next;
+		}
+	}
+}
+template<class T>
+void LinkList<T>::mergeSortedlist(LinkList<T>& f, LinkList<T>& s)
+{
+	int i = 0, j = 0;
+
+	while (i < f.count && j < s.count)
+	{
+		if (f.head->value < s.head->value)
+		{
+			insertNode(f.head->value);
+			i++;
+			f.head = f.head->next;
+		}
+		else
+		{
+			insertNode(s.head->value);
+			j++;
+			s.head = s.head->next;
+		}
+	}
+	if (f.head != nullptr)
+	{
+		while (i < f.count)
+		{
+			insertNode(f.head->value);
+			i++;
+			f.head = f.head->next;
+		}
+	}
+	if (s.head != nullptr)
+	{
+		while (j < s.count)
+		{
+			insertNode(s.head->value);
+			j++;
+			s.head = s.head->next;
+		}
+	}
+	//removeDuplicate();
+}
+
+template<class T>
+void LinkList<T>::reverseListinChunks(LinkList<T>& l, int n)
+{
+	int i = 0, j;
+	while (i < n)
+	{
+	    LinkList<T> temp;
+		j = 0;
+		while (j < n)
+		{
+			if (l.head)
+			{
+				temp.insertAtTail(l.head->value);
+				l.head = l.head->next;
+			}
+			else
+				break;
+			j++;
+		}
+		temp.printListReverse();
+		i++;
+	}
+	LinkList<T>t;
+	while (l.head)
+	{
+		t.insertAtTail(l.head->value);
+		l.head = l.head->next;
+	}
+	t.printList();
+	cout << endl;
+}
+template<class T>
+void LinkList<T>::alternateDeletion()
+{
+	ListNode<T>* nodePtr = head;
+	int i = 1;
+	while (nodePtr)
+	{
+		if (i % 2 == 0)
+		{
+			deleteNode(nodePtr->value);
+		}
+		if (nodePtr == nullptr)
+			break;
+		nodePtr = nodePtr->next;
+		i++;
+	}
+}
+
+template<class T>
+void printList(LinkList<T>& l)
+{
+	/*auto i = l.begin();
+	while (i != l.end())
+	{
+		cout << *i << " : ";
+		++i;
+	}*/
+
+	for (auto val : l)
+	{
+		cout << val << " : ";
+		++val;
+	}
+
+}
+template<class T>
+void crossProduct(LinkList<T>& l1, LinkList<T>& l2)
+{
+	auto i = l1.begin();
+	while (i != l1.end())
+	{
+		auto j = l2.begin();
+		while (j != l2.end())
+		{
+			cout << "(" << *i << "," << *j << ") ";
+			++j;
+		}
+		++i;
+	}
+}
+template<class T>
+void selectionSort(LinkList<T>& l)
+{
+	auto i = l.begin();
+	int min = 0;
+	while (i != l.end())
+	{
+		auto min = *i;
+		for (auto j = l.begin(); j != l.end(); ++j)
+		{
+			if (*j < min)
+			{
+				min = *j;
+			}
+		}
+		auto k = l.begin();
+		while (k != l.end())
+		{
+			if (min == *k)
+			{
+				auto l = min;
+				*min = *i;
+				*i = *l;
+			}
+		}
+		++i;
+	}
+	l.displayList();
+
+
+}
+
+
+#endif // !LINK_LIST
